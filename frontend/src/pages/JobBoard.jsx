@@ -5,6 +5,7 @@ import Nav from "../components/Nav";
 function Jobs() {
   const [jobs, setJobs] = useState([]);
   const [title, setTitle] = useState("");
+  const [company, setCompany] = useState("");
   const [description, setDescription] = useState("");
   const [location, setLocation] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
@@ -12,28 +13,33 @@ function Jobs() {
   // Fetch jobs
   const fetchJobs = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/api/jobs");
+      const res = await axios.get("https://linkedin-b-1.onrender.com/api/jobs");
       setJobs(res.data);
     } catch (error) {
-      console.error(error);
+      console.error(error.response ? error.response.data : error.message);
     }
   };
 
   // Add job
   const addJob = async () => {
-    if (!title.trim() || !description.trim() || !location.trim()) return;
+    if (!title.trim() || !company.trim() || !description.trim() || !location.trim()) {
+      alert("All fields are required");
+      return;
+    }
     try {
-      await axios.post("http://localhost:8000/api/jobs", {
+      await axios.post("https://linkedin-b-1.onrender.com/api/jobs/add", {
         title,
+        company,
         description,
         location,
       });
       setTitle("");
+      setCompany("");
       setDescription("");
       setLocation("");
       fetchJobs();
     } catch (error) {
-      console.error(error);
+      console.error(error.response ? error.response.data : error.message);
     }
   };
 
@@ -60,6 +66,13 @@ function Jobs() {
             placeholder="Title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
+            className="border p-2 rounded w-full sm:w-auto"
+          />
+          <input
+            type="text"
+            placeholder="Company"
+            value={company}
+            onChange={(e) => setCompany(e.target.value)}
             className="border p-2 rounded w-full sm:w-auto"
           />
           <input
@@ -103,7 +116,8 @@ function Jobs() {
               className="bg-white shadow-md rounded-lg p-4 border hover:shadow-lg transition duration-200"
             >
               <h3 className="text-lg font-bold text-gray-800">Title: {job.title}</h3>
-              <p className="text-gray-600 text-sm mt-2">Discription: {job.description}</p>
+              <p className="text-gray-700 text-sm mt-1">Company: {job.company}</p>
+              <p className="text-gray-600 text-sm mt-2">Description: {job.description}</p>
               <p className="text-gray-500 text-xs mt-2">Location: {job.location}</p>
             </div>
           ))
@@ -117,4 +131,4 @@ function Jobs() {
   );
 }
 
-export default Jobs;
+export default Jobs;

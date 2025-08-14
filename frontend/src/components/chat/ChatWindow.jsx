@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 
-const socket = io("http://localhost:8000", {
+const socket = io("https://linkedin-b-1.onrender.com", {
   withCredentials: true,
 });
 
